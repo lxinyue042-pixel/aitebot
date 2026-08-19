@@ -1,999 +1,212 @@
-<!doctype html> 
+<!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aitebot | 爱特沃机器人俱乐部</title>
-    <!-- 引入Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入Font Awesome图标（国内CDN镜像） -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <!-- 自定义Tailwind配置 -->
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: "#FF5A00", // 深圳科创学院橙色主色调
-              dark: "#111111",
-            },
-          },
-        },
-      };
-    </script>
-    <style type="text/tailwindcss">
-      @layer utilities {
-        .content-auto {
-          content-visibility: auto;
-        }
-        .text-balance {
-          text-wrap: balance;
-        }
-        .nav-scrolled {
-          @apply bg-white shadow-md;
-        }
-        .gradient-hero-1 {
-          background: linear-gradient(135deg, #ff5a00 0%, #ff8a00 50%, #ffb347 100%);
-        }
-        .gradient-hero-2 {
-          background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
-        }
-        .gradient-hero-3 {
-          background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-        }
-        .gradient-card {
-          background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        }
-      }
-    </style>
-    <style>
-      /* 基础样式重置 */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f4f2">
+  <meta name="description" content="AITEBOT 实验室为筑墙智匠建筑打印机器人打造的装饰构件、浮雕、装置与雕塑模型社区。">
+  <link rel="canonical" href="https://aitewo.top/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:site_name" content="AITEBOT MODEL HUB">
+  <meta property="og:title" content="AITEBOT LAB｜建筑打印模型社区">
+  <meta property="og:description" content="为筑墙智匠建筑打印机器人打造的装饰构件、纹样浮雕、景观装置与艺术雕塑模型社区。">
+  <meta property="og:url" content="https://aitewo.top/">
+  <meta property="og:image" content="https://aitewo.top/assets/robot-overview.png">
+  <meta property="og:image:alt" content="筑墙智匠高层建筑隔断墙 3D 打印机器人总体设计图">
+  <title>AITEBOT LAB｜建筑打印模型社区</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%231d211b'/%3E%3Cpath d='M15 47V18h8v29m8 0V25h8v22m8 0V32h8v15' stroke='%2376b900' stroke-width='5'/%3E%3C/svg%3E">
+  <link rel="manifest" href="manifest.webmanifest?v=28.8">
+  <link rel="preload" href="assets/fonts/SourceHanSansSC-Subset.woff2?v=28.8" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="tokens-v27.css?v=28.8">
+  <link rel="stylesheet" href="maker-v26.css?v=28.8">
+  <link rel="stylesheet" href="maker-v27.css?v=28.8">
+</head>
+<body>
+  <a class="skip-link" href="#catalog">跳到模型库</a>
 
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        font-family:
-          "Inter",
-          system-ui,
-          -apple-system,
-          sans-serif;
-        color: #111111;
-        line-height: 1.6;
-      }
-
-      /* 导航栏滚动效果 */
-      .navbar {
-        transition: all 0.3s ease;
-      }
-
-      /* 下拉菜单样式 */
-      .nav-item:hover .submenu {
-        display: block;
-      }
-
-      .submenu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        min-width: 160px;
-        z-index: 100;
-        border-radius: 4px;
-        overflow: hidden;
-      }
-
-      .submenu li {
-        width: 100%;
-      }
-
-      .submenu a {
-        display: block;
-        padding: 10px 16px;
-        white-space: nowrap;
-      }
-
-      .submenu a:hover {
-        background-color: #f5f5f5;
-      }
-
-      /* 轮播图样式 */
-      .hero-carousel {
-        position: relative;
-        height: 100vh;
-        overflow: hidden;
-      }
-
-      #heroSlides {
-        position: absolute;
-        inset: 0;
-      }
-
-      .slide {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        transition: opacity 0.8s ease-in-out;
-      }
-
-      .slide.active {
-        opacity: 1;
-      }
-
-      .slide img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .carousel-overlay {
-        position: absolute;
-        inset: 0;
-        background-color: rgba(0, 0, 0, 0.3);
-      }
-
-      .carousel-caption {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        color: white;
-        z-index: 10;
-        width: 90%;
-      }
-
-      .carousel-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0, 0, 0, 0.5);
-        color: white;
-        border: none;
-        padding: 16px;
-        font-size: 24px;
-        cursor: pointer;
-        z-index: 10;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background 0.3s ease;
-      }
-
-      .carousel-btn:hover {
-        background: rgba(0, 0, 0, 0.7);
-      }
-
-      .prev-btn {
-        left: 20px;
-      }
-
-      .next-btn {
-        right: 20px;
-      }
-
-      /* 轮播指示器 */
-      .carousel-dots {
-        position: absolute;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 10px;
-        z-index: 10;
-      }
-
-      .dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.5);
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-
-      .dot.active {
-        background: white;
-        width: 30px;
-        border-radius: 5px;
-      }
-
-      /* 卡片悬停效果 */
-      .project-card {
-        transition:
-          transform 0.3s ease,
-          box-shadow 0.3s ease;
-      }
-
-      .project-card:hover {
-        transform: translateY(-8px);
-        box-shadow:
-          0 20px 25px -5px rgba(0, 0, 0, 0.1),
-          0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      }
-
-      /* 返回顶部按钮 */
-      #topBtn {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        display: none;
-        background-color: #ff5a00;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
-        cursor: pointer;
-        z-index: 1000;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(255, 90, 0, 0.3);
-      }
-
-      #topBtn:hover {
-        background-color: #e65100;
-        transform: translateY(-2px);
-      }
-
-      /* 图片加载失败占位 */
-      .img-placeholder {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: rgba(0, 0, 0, 0.2);
-        font-size: 3rem;
-      }
-    </style>
-  </head>
-  <body class="bg-white">
-    <!-- 顶部导航栏（带下拉菜单） -->
-    <nav
-      id="navbar"
-      class="navbar fixed top-0 left-0 w-full z-50 bg-transparent"
-    >
-      <div
-        class="container mx-auto px-6 py-4 flex items-center justify-between"
-      >
-        <!-- Logo -->
-        <a href="#" class="logo text-2xl font-bold text-white">
-          <span class="text-primary">Aite</span>bot
-        </a>
-
-        <!-- 桌面端导航（带下拉菜单） -->
-        <div class="hidden md:flex items-center space-x-6">
-          <div class="nav-item relative">
-            <a
-              href="#about"
-              class="text-white hover:text-primary transition-colors"
-              data-i18n="navAbout"
-              >关于我们</a
-            >
-            <ul class="submenu">
-              <li>
-                <a href="#about" class="text-gray-700" data-i18n="navAboutLab"
-                  >实验室概况</a
-                >
-              </li>
-              <li>
-                <a href="#team" class="text-gray-700" data-i18n="navAboutTeam"
-                  >团队介绍</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#culture"
-                  class="text-gray-700"
-                  data-i18n="navAboutCulture"
-                  >实验室文化</a
-                >
-              </li>
-            </ul>
-          </div>
-
-          <div class="nav-item relative">
-            <a
-              href="#projects"
-              class="text-white hover:text-primary transition-colors"
-              data-i18n="navProjects"
-              >我们的工作</a
-            >
-            <ul class="submenu">
-              <li>
-                <a
-                  href="#projects"
-                  class="text-gray-700"
-                  data-i18n="navProjectsIndustrial"
-                  >工业级项目</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#projects"
-                  class="text-gray-700"
-                  data-i18n="navProjectsResearch"
-                  >科研级项目</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#projects"
-                  class="text-gray-700"
-                  data-i18n="navProjectsTransfer"
-                  >技术转化级项目</a
-                >
-              </li>
-            </ul>
-          </div>
-
-          <a
-            href="#ecosystem"
-            class="text-white hover:text-primary transition-colors"
-            data-i18n="navEcosystem"
-            >科创生态</a
-          >
-          <a
-            href="#partners"
-            class="text-white hover:text-primary transition-colors"
-            data-i18n="navPartners"
-            >合作平台</a
-          >
-          <a
-            href="#news"
-            class="text-white hover:text-primary transition-colors"
-            data-i18n="navNews"
-            >新闻动态</a
-          >
-          <a
-            href="#contact"
-            class="text-white hover:text-primary transition-colors"
-            data-i18n="navContact"
-            >联系我们</a
-          >
-
-          <button
-            id="langBtn"
-            type="button"
-            class="ml-2 px-3 py-1 rounded border border-white/60 text-white text-sm font-medium hover:bg-white/10 transition-colors"
-            aria-label="Switch language"
-          >
-            EN
-          </button>
-        </div>
-
-        <!-- 移动端菜单按钮 -->
-        <div class="flex items-center gap-4 md:hidden">
-          <button
-            id="langBtnMobile"
-            type="button"
-            class="px-3 py-1 rounded border border-white/60 text-white text-sm font-medium"
-            aria-label="Switch language"
-          >
-            EN
-          </button>
-          <button id="menuBtn" class="text-white focus:outline-none">
-            <i class="fa fa-bars text-2xl"></i>
-          </button>
-        </div>
+  <header class="site-header">
+    <div class="header-bar">
+      <a class="brand" href="#top" aria-label="AITEBOT 建筑打印模型社区首页">
+        <span class="brand-wordmark"><b>AITEBOT</b><i aria-hidden="true"></i></span>
+        <small class="brand-context">建筑打印模型库</small>
+      </a>
+      <button class="global-search header-search" id="openSearch" type="button" aria-haspopup="dialog" aria-controls="searchDialog">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>
+        <span class="search-placeholder">搜索装饰模型、作者或编号</span>
+        <kbd>Ctrl K</kbd>
+      </button>
+      <div class="header-tools">
+        <div class="network-state" id="networkState" role="status" aria-live="polite" title="正在检测网络与离线能力"><i aria-hidden="true"></i><span>连接检测中</span></div>
+        <button class="header-favorite" id="navFavorite" type="button" aria-label="查看收藏模型">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+          <em id="navFavoriteCount">0</em>
+        </button>
+        <button class="publish-button" id="openUpload" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>发布模型</span></button>
       </div>
-
-      <!-- 移动端导航菜单 -->
-      <div id="mobileMenu" class="md:hidden hidden bg-white shadow-lg">
-        <div class="container mx-auto px-6 py-4 flex flex-col space-y-4">
-          <a
-            href="#about"
-            class="text-gray-700 hover:text-primary py-2 border-b border-gray-100"
-            data-i18n="navAbout"
-            >关于我们</a
-          >
-          <a
-            href="#projects"
-            class="text-gray-700 hover:text-primary py-2 border-b border-gray-100"
-            data-i18n="navProjects"
-            >我们的工作</a
-          >
-          <a
-            href="#ecosystem"
-            class="text-gray-700 hover:text-primary py-2 border-b border-gray-100"
-            data-i18n="navEcosystem"
-            >科创生态</a
-          >
-          <a
-            href="#partners"
-            class="text-gray-700 hover:text-primary py-2 border-b border-gray-100"
-            data-i18n="navPartners"
-            >合作平台</a
-          >
-          <a
-            href="#news"
-            class="text-gray-700 hover:text-primary py-2 border-b border-gray-100"
-            data-i18n="navNews"
-            >新闻动态</a
-          >
-          <a
-            href="#contact"
-            class="text-gray-700 hover:text-primary py-2"
-            data-i18n="navContact"
-            >联系我们</a
-          >
-        </div>
-      </div>
+    </div>
+    <nav class="main-nav" aria-label="主导航">
+      <a class="active" href="#project" data-scroll-target="project">筑墙智匠机器人</a>
+      <a href="#catalog" data-nav-category="全部">精选</a>
+      <a href="#catalog" data-nav-category="装饰构件">装饰构件</a>
+      <a href="#catalog" data-nav-category="纹样浮雕">纹样浮雕</a>
+      <a href="#catalog" data-nav-category="景观装置">景观装置</a>
+      <a href="#catalog" data-nav-category="艺术雕塑">艺术雕塑</a>
     </nav>
+  </header>
 
-    <!-- 英雄区（自动轮播图） -->
-    <section class="hero-carousel">
-      <div id="heroSlides"></div>
-
-      <div class="carousel-caption">
-        <h1
-          id="heroTitle"
-          class="text-[clamp(3rem,8vw,6rem)] font-bold mb-6 leading-tight"
-        ></h1>
-        <p
-          id="heroSubtitle"
-          class="text-[clamp(1.2rem,3vw,1.8rem)] text-white/90 mb-12 max-w-3xl mx-auto text-balance"
-        ></p>
-        <a
-          id="heroCta"
-          href="#about"
-          class="inline-block bg-primary hover:bg-primary/90 text-white font-medium px-8 py-3 rounded transition-colors"
-        ></a>
-      </div>
-
-      <button class="carousel-btn prev-btn" onclick="prevSlide()">
-        <i class="fa fa-chevron-left"></i>
-      </button>
-      <button class="carousel-btn next-btn" onclick="nextSlide()">
-        <i class="fa fa-chevron-right"></i>
-      </button>
-
-      <div id="heroDots" class="carousel-dots"></div>
-    </section>
-
-    <!-- 关于我们 -->
-    <section id="about" class="py-24 bg-white">
-      <div class="container mx-auto px-6">
-        <div class="max-w-4xl mx-auto">
-          <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-12" data-i18n="aboutTitle">关于爱特沃</h2>
-          <div class="space-y-8 text-lg text-gray-700">
-            <p data-i18n="aboutP1">爱特沃智能机器人实验室核心聚焦智能机器人、人工智能、低空经济三大核心领域，围绕硬件设计、嵌入式开发、算法控制、交互设计、视觉传达全技术栈开展技术攻关、创新实践与成果转化。</p>
-            <p data-i18n="aboutP2">以"技术创新+场景落地+产业赋能"为核心逻辑，依托武汉理工大学科研平台、重点实验室与校企合作资源，打造集科研训练、技术研发、创业实践、产业落地于一体的科创平台。</p>
-          </div>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20">
-            <div class="text-center">
-              <div class="text-4xl md:text-5xl font-bold text-primary mb-2">5</div>
-              <p class="text-gray-600" data-i18n="statProjects">我们的工作</p>
+  <main id="top" tabindex="-1">
+    <section class="hero" aria-labelledby="heroTitle">
+      <header class="section-heading feature-heading">
+        <div><h1 id="heroTitle">本周打印灵感</h1></div>
+        <a href="#catalog">浏览全部模型 <span aria-hidden="true">→</span></a>
+      </header>
+      <div class="showcase-grid">
+        <article class="showcase-feature">
+          <canvas id="heroCanvas" tabindex="0" aria-label="精选模型三维预览。拖动或方向键旋转，滚轮或加减键缩放"></canvas>
+          <div class="stage-topline"><span id="inspectorCode">BF-003</span><small>拖动旋转</small></div>
+          <div class="stage-axis" aria-hidden="true"><span>X</span><span>Y</span><span>Z</span></div>
+          <div class="feature-overlay" aria-labelledby="inspectorTitle">
+            <div class="feature-copy">
+              <p id="inspectorCategory">艺术雕塑 / 可打印模型</p>
+              <h2 id="inspectorTitle">扭转层积图腾</h2>
+              <span>由 <b id="inspectorAuthor">参数建造研究组</b> 发布</span>
             </div>
-            <div class="text-center">
-              <div class="text-4xl md:text-5xl font-bold text-primary mb-2">35</div>
-              <p class="text-gray-600" data-i18n="statMembers">团队成员</p>
-            </div>
-            <div class="text-center">
-              <div class="text-4xl md:text-5xl font-bold text-primary mb-2">5</div>
-              <p class="text-gray-600" data-i18n="statDepts">职能部门</p>
-            </div>
-            <div class="text-center">
-              <div class="text-4xl md:text-5xl font-bold text-primary mb-2">26</div>
-              <p class="text-gray-600" data-i18n="statTech">技术人员</p>
+            <div class="feature-actions">
+              <button id="heroOpenModel" type="button">查看模型</button>
+              <button id="quickDownload" type="button">下载 STL</button>
+              <button class="inspector-favorite" id="inspectorFavorite" type="button" aria-pressed="false" aria-label="收藏当前模型">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+              </button>
             </div>
           </div>
+          <p class="sr-only" id="inspectorDescription">逐层偏转的薄片围绕中轴向上生长，形成连续旋动的雕塑剪影。</p>
+          <dl class="inspector-specs" hidden>
+            <div><dt>尺寸</dt><dd id="inspectorDimensions">1200 × 1200 × 3200 mm</dd></div>
+            <div><dt>材料</dt><dd id="inspectorMaterial">高流变打印砂浆</dd></div>
+            <div><dt>层高</dt><dd id="inspectorLayer">12 mm</dd></div>
+            <div><dt>耗时</dt><dd id="inspectorTime">7h 10m</dd></div>
+          </dl>
+        </article>
+        <div class="showcase-mini-grid" aria-label="精选模型">
+          <button class="showcase-card" type="button" data-showcase="BF-001" aria-label="查看波纹砂岩壁饰"><canvas data-preview="BF-001" aria-hidden="true"></canvas><span class="showcase-card-meta"><strong>波纹砂岩壁饰</strong><small>筑构实验室</small></span></button>
+          <button class="showcase-card" type="button" data-showcase="BF-002" aria-label="查看花瓣拱景雕塑"><canvas data-preview="BF-002" aria-hidden="true"></canvas><span class="showcase-card-meta"><strong>花瓣拱景雕塑</strong><small>爱特沃设计组</small></span></button>
+          <button class="showcase-card" type="button" data-showcase="BF-004" aria-label="查看折纸花庭装置"><canvas data-preview="BF-004" aria-hidden="true"></canvas><span class="showcase-card-meta"><strong>折纸花庭装置</strong><small>城市打印工作室</small></span></button>
+          <button class="showcase-card" type="button" data-showcase="BF-006" aria-label="查看菌褶光影装置"><canvas data-preview="BF-006" aria-hidden="true"></canvas><span class="showcase-card-meta"><strong>菌褶光影装置</strong><small>未来建造联合实验室</small></span></button>
+          <button class="showcase-card" type="button" data-showcase="BF-009" aria-label="查看贝壳回声雕塑"><canvas data-preview="BF-009" aria-hidden="true"></canvas><span class="showcase-card-meta"><strong>贝壳回声雕塑</strong><small>壳体建造组</small></span></button>
+          <button class="showcase-card" type="button" data-showcase="BF-010" aria-label="查看环流地景装置"><canvas data-preview="BF-010" aria-hidden="true"></canvas><span class="showcase-card-meta"><strong>环流地景装置</strong><small>智能建造中心</small></span></button>
         </div>
       </div>
     </section>
 
-    <!-- 在研项目 -->
-    <section id="projects" class="py-24 bg-white">
-      <div class="container mx-auto px-6">
-        <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-16" data-i18n="projectsTitle">我们的工作</h2>
-        <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    <section class="collections" aria-label="主题模型精选">
+      <section class="collection-shelf" aria-labelledby="architectureShelfTitle">
+        <header class="shelf-heading"><div><h2 id="architectureShelfTitle">构件与浮雕精选</h2></div><a href="#catalog">查看全部</a></header>
+        <div class="shelf-grid">
+          <button class="shelf-card" type="button" data-showcase="BF-005" aria-label="查看蜂巢光影花窗"><canvas data-preview="BF-005" aria-hidden="true"></canvas><span><strong>蜂巢光影花窗</strong><small>数字构筑社</small></span></button>
+          <button class="shelf-card" type="button" data-showcase="BF-007" aria-label="查看双曲涟漪壁饰"><canvas data-preview="BF-007" aria-hidden="true"></canvas><span><strong>双曲涟漪壁饰</strong><small>FORM-X</small></span></button>
+          <button class="shelf-card" type="button" data-showcase="BF-011" aria-label="查看层叠山峦壁饰"><canvas data-preview="BF-011" aria-hidden="true"></canvas><span><strong>层叠山峦壁饰</strong><small>展会专项组</small></span></button>
+        </div>
+      </section>
+      <section class="collection-shelf" aria-labelledby="landscapeShelfTitle">
+        <header class="shelf-heading"><div><h2 id="landscapeShelfTitle">装置与雕塑精选</h2></div><a href="#catalog">查看全部</a></header>
+        <div class="shelf-grid">
+          <button class="shelf-card" type="button" data-showcase="BF-004" aria-label="查看折纸花庭装置"><canvas data-preview="BF-004" aria-hidden="true"></canvas><span><strong>折纸花庭装置</strong><small>城市打印工作室</small></span></button>
+          <button class="shelf-card" type="button" data-showcase="BF-008" aria-label="查看螺旋生长图腾"><canvas data-preview="BF-008" aria-hidden="true"></canvas><span><strong>螺旋生长图腾</strong><small>绿建打印计划</small></span></button>
+          <button class="shelf-card" type="button" data-showcase="BF-012" aria-label="查看渐变空腔花柱"><canvas data-preview="BF-012" aria-hidden="true"></canvas><span><strong>渐变空腔花柱</strong><small>拓扑构筑小组</small></span></button>
+        </div>
+      </section>
+    </section>
+
+    <section class="catalog" id="catalog" aria-labelledby="catalogTitle">
+      <div class="catalog-heading">
+        <div><h2 id="catalogTitle">发现更多模型</h2><p>面向建筑打印机器人的装饰构件、纹样浮雕、景观装置与艺术雕塑</p></div>
+        <div class="result-status"><span id="resultCount">12 个模型</span><i aria-hidden="true"></i></div>
+      </div>
+
+      <div class="catalog-controls">
+        <nav class="rail-categories" id="quickCategories" aria-label="模型类型">
+          <button type="button" data-category="全部">全部模型 <span>12</span></button>
+          <button type="button" data-category="装饰构件">装饰构件 <span>03</span></button>
+          <button type="button" data-category="纹样浮雕">纹样浮雕 <span>03</span></button>
+          <button type="button" data-category="景观装置">景观装置 <span>03</span></button>
+          <button type="button" data-category="艺术雕塑">艺术雕塑 <span>03</span></button>
+        </nav>
+        <div class="catalog-tools">
+          <label class="sort-box"><span>排序</span><select id="sortSelect" name="sort" aria-label="模型排序"><option value="featured">推荐</option><option value="name">名称顺序</option></select></label>
+          <button class="favorite-filter" id="favoriteFilter" type="button" aria-pressed="false">我的收藏 <span id="favoriteCount">0</span></button>
+        </div>
+      </div>
+      <div class="mobile-categories" id="categoryTabs" aria-label="模型分类"></div>
+      <div class="model-grid" id="modelGrid" role="list"></div>
+      <div class="empty-state" id="emptyState" hidden><b>没有找到匹配模型</b><p>换一个关键词，或清除分类与收藏筛选。</p><button class="button button-dark" id="clearFilters" type="button">清除筛选</button></div>
+      <p class="catalog-note">演示模型提供可下载 STL 与建议参数；正式打印前仍需完成切片、路径校核与材料试验。</p>
+    </section>
+
+    <section class="robot-dossier" id="project" aria-labelledby="robotTitle">
+      <div class="dossier-grid">
+        <div class="dossier-copy">
+          <header class="dossier-intro">
+            <div><p>AITEBOT LAB / ZH-01</p><h2 id="robotTitle">机器定义边界，<br>模型拓展可能。</h2></div>
+            <p>这个模型库不是通用 3D 素材站。每一件作品都以筑墙智匠的打印尺度为边界，将表面肌理、层积曲线和雕塑体量转化为可打印的装饰表达。</p>
+          </header>
+          <div class="dossier-register">
+            <dl class="robot-facts">
+              <div><dt>最高作业高度</dt><dd>3 m</dd><small>两级升降系统</small></div>
+              <div><dt>建造效率</dt><dd>64 ㎡ / 天</dd><small>方案测算数据</small></div>
+              <div><dt>单位耗时</dt><dd>0.125 h / ㎡</dd><small>连续打印工况</small></div>
+              <div><dt>设计寿命</dt><dd>50,000 h</dd><small>项目方案指标</small></div>
+            </dl>
+            <div class="module-register"><h3>移动、升降、打印，一体完成</h3><article><span>移动</span><b>履带 + 丝杆定位</b><p>完成室内移动和打印模块水平定位。</p></article><article><span>升降</span><b>两级同步结构</b><p>调节喷头作业高度并保持运行稳定。</p></article><article><span>打印</span><b>机械臂 + 连续供料</b><p>调节打印姿态，保持混凝土连续出料。</p></article></div>
+          </div>
+        </div>
+        <figure class="robot-portrait">
+          <div class="robot-image-wrap">
+            <div class="robot-image-stage">
+              <img src="assets/robot-overview.png" width="780" height="982" alt="筑墙智匠高层建筑隔断墙 3D 打印机器人总体设计图" loading="eager" fetchpriority="high">
+              <span class="robot-hotspot hotspot-lift"><i></i><b>两级同步升降</b></span>
+              <span class="robot-hotspot hotspot-print"><i></i><b>机械臂连续打印</b></span>
+              <span class="robot-hotspot hotspot-move"><i></i><b>履带移动定位</b></span>
+            </div>
+          </div>
+          <figcaption><span>ZH-01 总体设计</span><b>高层建筑隔断墙 3D 打印机器人</b></figcaption>
+        </figure>
       </div>
     </section>
 
-    <!-- 科创生态 -->
-    <section id="ecosystem" class="py-24 bg-gray-100">
-      <div class="container mx-auto px-6">
-        <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-16" data-i18n="ecosystemTitle">科创生态</h2>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <h3 class="text-2xl font-bold mb-6" data-i18n="advantagesTitle">我们的优势</h3>
-            <div class="space-y-6">
-              <div class="flex">
-                <div class="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
-                  <i class="fa fa-handshake-o text-primary text-xl"></i>
-                </div>
-                <div>
-                  <h4 class="text-lg font-semibold mb-2" data-i18n="adv2Title">真实企业合作</h4>
-                  <p class="text-gray-600" data-i18n="adv2Desc">与中建三局科创、苏州仁帮集团等企业建立合作，打通技术研发与产业落地通道。</p>
-                </div>
-              </div>
-              <div class="flex">
-                <div class="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
-                  <i class="fa fa-users text-primary text-xl"></i>
-                </div>
-                <div>
-                  <h4 class="text-lg font-semibold mb-2" data-i18n="adv3Title">完整人才体系</h4>
-                  <p class="text-gray-600" data-i18n="adv3Desc">覆盖硬件、软件、算法、设计、运营全链条，形成稳定的本硕研发团队。</p>
-                </div>
-              </div>
-              <div class="flex">
-                <div class="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
-                  <i class="fa fa-lightbulb-o text-primary text-xl"></i>
-                </div>
-                <div>
-                  <h4 class="text-lg font-semibold mb-2" data-i18n="adv4Title">全技术栈能力</h4>
-                  <p class="text-gray-600" data-i18n="adv4Desc">掌握硬件设计、嵌入式开发、算法控制、交互设计、视觉传达全技术栈。</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="bg-white p-8 rounded-lg shadow-md">
-            <h3 class="text-2xl font-bold mb-6" data-i18n="missionTitle">我们的使命</h3>
-            <blockquote class="text-lg text-gray-700 italic border-l-4 border-primary pl-4 leading-relaxed" data-i18n="missionQuote">"基于高校平台快速产品迭代研发，链接企业资源走向市场完成商业闭环，打造中国硬科技创新创业的生力军。"</blockquote>
-          </div>
-        </div>
-      </div>
+    <section class="workflow" id="workflow" aria-labelledby="workflowTitle">
+      <div class="workflow-heading"><h2 id="workflowTitle">从模型，到现场。</h2><p>社区负责拓展可能，机器人负责把数字几何变成实体建造。</p></div>
+      <ol class="build-path"><li><b>选择几何</b><p>确认装饰构件、浮雕、装置或雕塑的尺寸与打印边界。</p></li><li><b>切片校核</b><p>检查层高、线宽、材料与连续打印路径。</p></li><li><b>机器人建造</b><p>沿校核后的路径逐层完成实体打印。</p></li></ol>
+      <p class="source-note">资料来源：《高层建筑隔断墙 3D 打印机器人的设计》项目方案。本站用于模型社区与离线展会演示，不直接控制设备。</p>
     </section>
+  </main>
 
-    <!-- 合作平台 -->
-    <section id="partners" class="py-24 bg-white">
-      <div class="container mx-auto px-6">
-        <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-16" data-i18n="partnersTitle">合作平台</h2>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <div class="h-24 bg-gray-100 rounded flex items-center justify-center hover:bg-gray-200 transition-colors">
-            <span class="text-gray-500 font-medium" data-i18n="partnerWut">武汉理工大学</span>
-          </div>
-          <div class="h-24 bg-gray-100 rounded flex items-center justify-center hover:bg-gray-200 transition-colors">
-            <span class="text-gray-500 font-medium" data-i18n="partnerCscec">中建三局科创</span>
-          </div>
-          <div class="h-24 bg-gray-100 rounded flex items-center justify-center hover:bg-gray-200 transition-colors">
-            <span class="text-gray-500 font-medium" data-i18n="partnerShenyan">深研studio</span>
-          </div>
-          <div class="h-24 bg-gray-100 rounded flex items-center justify-center hover:bg-gray-200 transition-colors">
-            <span class="text-gray-500 font-medium" data-i18n="partnerRenbang">苏州仁帮集团</span>
-          </div>
-          <div class="h-24 bg-gray-100 rounded flex items-center justify-center hover:bg-gray-200 transition-colors">
-            <span class="text-gray-500 font-medium" data-i18n="partnerMore">更多合作单位</span>
-          </div>
-        </div>
+  <footer class="site-footer">
+    <p><b>AITEBOT MODEL HUB</b> 是爱特沃智能机器人有限公司为“筑墙智匠 ZH-01”建立的建筑打印模型社区与离线展会演示。收录装饰构件、纹样浮雕、景观装置与艺术雕塑；提供交互预览、建议打印参数、本地收藏与 STL 下载；不接入、不控制机器人设备。</p>
+    <p>CHONGQING / 2026 · OFFLINE VIA HTTPS · SOURCE HAN SANS SC / SIL OFL 1.1</p>
+  </footer>
+
+  <dialog class="search-dialog" id="searchDialog" aria-labelledby="searchTitle">
+    <form method="dialog" class="search-box">
+      <div class="search-field">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>
+        <label class="sr-only" for="searchInput" id="searchTitle">搜索模型</label>
+        <input id="searchInput" name="q" type="search" placeholder="例如：波纹壁饰、BF-003 或作者…" autocomplete="off">
+        <button id="closeSearch" type="button">Esc</button>
       </div>
-    </section>
+      <div class="search-results" id="searchResults" role="listbox" aria-label="模型搜索结果"></div>
+      <p class="search-hint"><span>↑ ↓ 选择</span><span>Enter 打开</span><span>Esc 关闭</span></p>
+    </form>
+  </dialog>
 
-    <!-- 新闻动态 -->
-    <section id="news" class="py-24 bg-gray-100">
-      <div class="container mx-auto px-6">
-        <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-16" data-i18n="newsTitle">新闻动态</h2>
-        <div id="newsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-        <div class="text-center mt-12">
-          <a href="#" class="inline-block border border-primary text-primary hover:bg-primary hover:text-white font-medium px-6 py-2 rounded transition-colors" data-i18n="newsMore">查看更多新闻</a>
-        </div>
-      </div>
-    </section>
+  <dialog class="model-dialog" id="modelDialog" aria-labelledby="detailTitle" aria-describedby="detailDescription">
+    <button class="dialog-close" id="closeModel" type="button" aria-label="关闭模型详情">×</button>
+    <div class="detail-visual"><div class="detail-visual-head"><span id="detailCode">BF-001</span><span>交互式三维预览</span></div><canvas id="detailCanvas" tabindex="0" aria-label="模型三维预览。拖动或方向键旋转，滚轮或加减键缩放"></canvas><div class="detail-axis" aria-hidden="true"><span>X</span><span>Y</span><span>Z</span></div><div class="canvas-help">拖动旋转 / 滚轮缩放</div></div>
+    <div class="detail-content"><p class="detail-category" id="detailCategory"></p><h2 id="detailTitle"></h2><p class="detail-description" id="detailDescription"></p><div class="detail-author"><span>模型设计者</span><b id="detailAuthor"></b></div><dl class="spec-grid" id="detailSpecs"></dl><div class="tag-list" id="detailTags"></div><div class="detail-note"><b>机器人适配说明</b><p>模型面向筑墙智匠应用场景展示。页面提供建议参数，但不直接连接或控制设备。</p></div><div class="detail-actions"><button class="button button-accent" id="detailFavorite" type="button" aria-pressed="false">收藏模型</button><button class="button button-light" id="downloadStl" type="button">下载 STL</button></div></div>
+  </dialog>
 
-    <!-- 联系我们 -->
-    <section id="contact" class="py-24 bg-dark text-white">
-      <div class="container mx-auto px-6">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          <div>
-            <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-8" data-i18n="contactTitle">联系我们</h2>
-            <p class="text-gray-300 mb-8 max-w-lg" data-i18n="contactDesc">如果您对我们的项目感兴趣，或希望与我们开展合作，欢迎通过以下方式联系我们。</p>
-            <div class="space-y-6">
-              <div class="flex items-center">
-                <i class="fa fa-map-marker text-primary text-xl mr-4 w-6 text-center"></i>
-                <span data-i18n="contactAddress">湖北省武汉市洪山区武汉理工大学</span>
-              </div>
-              <div class="flex items-center">
-                <i class="fa fa-envelope text-primary text-xl mr-4 w-6 text-center"></i>
-                <span>zhuqianyu@aitebot.cn</span>
-              </div>
-              <div class="flex items-center">
-                <i class="fa fa-phone text-primary text-xl mr-4 w-6 text-center"></i>
-                <span>15623173558</span>
-              </div>
-            </div>
-            <div class="mt-12 flex space-x-6">
-              <a href="#" class="text-gray-300 hover:text-primary text-2xl transition-colors"><i class="fa fa-weixin"></i></a>
-              <a href="#" class="text-gray-300 hover:text-primary text-2xl transition-colors"><i class="fa fa-weibo"></i></a>
-              <a href="#" class="text-gray-300 hover:text-primary text-2xl transition-colors"><i class="fa fa-github"></i></a>
-              <a href="#" class="text-gray-300 hover:text-primary text-2xl transition-colors"><i class="fa fa-bilibili"></i></a>
-            </div>
-          </div>
-          <div>
-            <form id="contactForm" class="space-y-6">
-              <div>
-                <label for="name" class="block text-gray-300 mb-2" data-i18n="contactName">姓名</label>
-                <input type="text" id="name" class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors" data-i18n-placeholder="contactNamePh" placeholder="请输入您的姓名" />
-              </div>
-              <div>
-                <label for="email" class="block text-gray-300 mb-2" data-i18n="contactEmail">邮箱</label>
-                <input type="email" id="email" class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors" data-i18n-placeholder="contactEmailPh" placeholder="请输入您的邮箱" />
-              </div>
-              <div>
-                <label for="message" class="block text-gray-300 mb-2" data-i18n="contactMessage">留言</label>
-                <textarea id="message" rows="4" class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors resize-none" data-i18n-placeholder="contactMessagePh" placeholder="请输入您的留言内容"></textarea>
-              </div>
-              <button type="submit" class="bg-primary hover:bg-primary/90 text-white font-medium px-6 py-3 rounded transition-colors w-full md:w-auto" data-i18n="contactSend">发送消息</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 页脚 -->
-    <footer class="bg-black text-gray-400 py-8">
-      <div class="container mx-auto px-6">
-        <div class="flex flex-col md:flex-row justify-between items-center">
-          <div class="mb-6 md:mb-0">
-            <a href="#" class="text-2xl font-bold text-white"><span class="text-primary">Aite</span>bot</a>
-            <p class="mt-2" data-i18n="footerCompany">爱特沃智能机器人有限公司</p>
-          </div>
-          <div class="text-center md:text-right">
-            <p>© 2026 Aitebot. All rights reserved.</p>
-            <p class="mt-1" data-i18n="footerIcp">鄂ICP备XXXXXXXX号</p>
-          </div>
-        </div>
-      </div>
-    </footer>
-
-    <!-- 返回顶部按钮 -->
-    <button id="topBtn" onclick="scrollToTop()" aria-label="返回顶部">
-      <i class="fa fa-chevron-up"></i>
-    </button>
-
-    <!-- JavaScript -->
-    <script>
-      let slideIndex = 0;
-      let slides = [];
-      let dots = [];
-      let totalSlides = 0;
-      let carouselTimer = null;
-      let contentData = null;
-      let currentLang = localStorage.getItem("aitebot-lang") || "zh";
-
-      function escapeHtml(text) {
-        return String(text ?? "")
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#39;");
-      }
-
-      function t(key) {
-        return contentData?.[currentLang]?.ui?.[key] ?? contentData?.zh?.ui?.[key] ?? key;
-      }
-
-      function showSlide(index) {
-        if (!totalSlides) return;
-        slides.forEach((s, i) => {
-          s.classList.toggle("active", i === index);
-          if (dots[i]) dots[i].classList.toggle("active", i === index);
-        });
-      }
-
-      function nextSlide() {
-        if (!totalSlides) return;
-        slideIndex = (slideIndex + 1) % totalSlides;
-        showSlide(slideIndex);
-      }
-
-      function prevSlide() {
-        if (!totalSlides) return;
-        slideIndex = (slideIndex - 1 + totalSlides) % totalSlides;
-        showSlide(slideIndex);
-      }
-
-      function goToSlide(index) {
-        if (!totalSlides) return;
-        slideIndex = index;
-        showSlide(slideIndex);
-      }
-
-      function initCarousel() {
-        slides = Array.from(document.querySelectorAll(".hero-carousel .slide"));
-        dots = Array.from(document.querySelectorAll("#heroDots .dot"));
-        totalSlides = slides.length;
-        slideIndex = 0;
-
-        if (carouselTimer) clearInterval(carouselTimer);
-        if (!totalSlides) return;
-
-        showSlide(0);
-        carouselTimer = setInterval(nextSlide, 5000);
-      }
-
-      function renderHero(hero) {
-        const slidesEl = document.getElementById("heroSlides");
-        const dotsEl = document.getElementById("heroDots");
-        const gradients = ["gradient-hero-1", "gradient-hero-2", "gradient-hero-3"];
-
-        document.getElementById("heroTitle").textContent = hero.title || "";
-        document.getElementById("heroSubtitle").textContent = hero.subtitle || "";
-        const cta = document.getElementById("heroCta");
-        cta.textContent = hero.ctaText || t("navAbout");
-        cta.setAttribute("href", hero.ctaHref || "#about");
-
-        slidesEl.innerHTML = (hero.slides || [])
-          .map((slide, i) => {
-            const gradient = slide.gradient || gradients[i % gradients.length];
-            return `
-              <div class="slide ${i === 0 ? "active" : ""} ${escapeHtml(gradient)}">
-                <img
-                  src="${escapeHtml(slide.image)}"
-                  alt="${escapeHtml(slide.alt || "")}"
-                  onerror="this.style.display='none'"
-                />
-                <div class="carousel-overlay"></div>
-              </div>
-            `;
-          })
-          .join("");
-
-        dotsEl.innerHTML = (hero.slides || [])
-          .map(
-            (_, i) =>
-              `<div class="dot ${i === 0 ? "active" : ""}" onclick="goToSlide(${i})"></div>`
-          )
-          .join("");
-      }
-
-      function renderProjects(projects) {
-        const grid = document.getElementById("projectsGrid");
-        const detailText = t("projectDetail");
-        grid.innerHTML = (projects || [])
-          .map(
-            (p) => `
-            <div class="project-card bg-white rounded-lg overflow-hidden shadow-md">
-              <div class="h-64 gradient-card">
-                <img
-                  src="${escapeHtml(p.image)}"
-                  alt="${escapeHtml(p.title || "")}"
-                  class="w-full h-full object-cover"
-                  onerror="this.style.display='none'"
-                />
-                <div class="img-placeholder">
-                  <i class="fa ${escapeHtml(p.icon || "fa-cube")}"></i>
-                </div>
-              </div>
-              <div class="p-6">
-                <span class="inline-block ${escapeHtml(p.tagClass || "bg-primary/10 text-primary")} text-xs font-medium px-3 py-1 rounded-full mb-4">${escapeHtml(p.tag || "")}</span>
-                <h3 class="text-xl font-bold mb-2">${escapeHtml(p.title || "")}</h3>
-                <p class="text-gray-600 mb-4">${escapeHtml(p.description || "")}</p>
-                <a href="${escapeHtml(p.link || "#")}" class="text-primary font-medium hover:underline">${escapeHtml(detailText)}</a>
-              </div>
-            </div>
-          `
-          )
-          .join("");
-      }
-
-      function renderNews(news) {
-        const grid = document.getElementById("newsGrid");
-        const readMore = t("newsReadMore");
-        grid.innerHTML = (news || [])
-          .map(
-            (n) => `
-            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-              <div class="h-48 gradient-card">
-                <img
-                  src="${escapeHtml(n.image)}"
-                  alt="${escapeHtml(n.title || "")}"
-                  class="w-full h-full object-cover"
-                  onerror="this.style.display='none'"
-                />
-                <div class="img-placeholder text-2xl">
-                  <i class="fa ${escapeHtml(n.icon || "fa-newspaper-o")}"></i>
-                </div>
-              </div>
-              <div class="p-6">
-                <p class="text-gray-500 text-sm mb-2">${escapeHtml(n.date || "")}</p>
-                <h3 class="text-xl font-bold mb-3">${escapeHtml(n.title || "")}</h3>
-                <p class="text-gray-600 mb-4">${escapeHtml(n.summary || "")}</p>
-                <a href="${escapeHtml(n.link || "#")}" class="text-primary font-medium hover:underline">${escapeHtml(readMore)}</a>
-              </div>
-            </div>
-          `
-          )
-          .join("");
-      }
-
-      function applyStaticI18n() {
-        const ui = contentData?.[currentLang]?.ui || {};
-        document.documentElement.lang = currentLang === "en" ? "en" : "zh-CN";
-        if (ui.pageTitle) document.title = ui.pageTitle;
-
-        document.querySelectorAll("[data-i18n]").forEach((el) => {
-          const key = el.getAttribute("data-i18n");
-          if (ui[key] != null) el.textContent = ui[key];
-        });
-
-        document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-          const key = el.getAttribute("data-i18n-placeholder");
-          if (ui[key] != null) el.setAttribute("placeholder", ui[key]);
-        });
-
-        const switchLabel = ui.langSwitch || (currentLang === "zh" ? "EN" : "中文");
-        document.querySelectorAll("#langBtn, #langBtnMobile").forEach((btn) => {
-          btn.textContent = switchLabel;
-        });
-      }
-
-      function applyLanguage() {
-        if (!contentData) return;
-        const pack = contentData[currentLang] || contentData.zh;
-        applyStaticI18n();
-        renderHero(pack.hero || {});
-        renderProjects(pack.projects || []);
-        renderNews(pack.news || []);
-        initCarousel();
-        localStorage.setItem("aitebot-lang", currentLang);
-      }
-
-      function toggleLanguage() {
-        currentLang = currentLang === "zh" ? "en" : "zh";
-        applyLanguage();
-      }
-
-      async function loadContent() {
-        try {
-          const res = await fetch("./content.json", { cache: "no-cache" });
-          if (!res.ok) throw new Error("Failed to load content.json");
-          contentData = await res.json();
-          // Support both bilingual {zh,en} and legacy flat shape
-          if (!contentData.zh && contentData.hero) {
-            contentData = { zh: contentData, en: contentData };
-          }
-          applyLanguage();
-        } catch (err) {
-          console.error(err);
-          document.getElementById("heroTitle").textContent =
-            currentLang === "en" ? "Failed to load content" : "内容加载失败";
-          document.getElementById("heroSubtitle").textContent =
-            currentLang === "en"
-              ? "Please check that public/content.json exists"
-              : "请检查 public/content.json 是否存在";
-        }
-      }
-
-      document.querySelectorAll("#langBtn, #langBtnMobile").forEach((btn) => {
-        btn.addEventListener("click", toggleLanguage);
-      });
-
-      const carousel = document.querySelector(".hero-carousel");
-      carousel.addEventListener("mouseenter", () => {
-        if (carouselTimer) clearInterval(carouselTimer);
-      });
-      carousel.addEventListener("mouseleave", () => {
-        if (totalSlides) carouselTimer = setInterval(nextSlide, 5000);
-      });
-
-      loadContent();
-
-      // 导航栏滚动效果
-      window.addEventListener("scroll", function () {
-        const navbar = document.getElementById("navbar");
-        const logo = navbar.querySelector(".logo");
-        const navLinks = navbar.querySelectorAll(".nav-item > a");
-        const langBtns = document.querySelectorAll("#langBtn, #langBtnMobile");
-
-        if (window.scrollY > 50) {
-          navbar.classList.add("nav-scrolled");
-          logo.classList.remove("text-white");
-          logo.classList.add("text-dark");
-          navLinks.forEach((link) => {
-            link.classList.remove("text-white");
-            link.classList.add("text-gray-700");
-          });
-          langBtns.forEach((btn) => {
-            btn.classList.remove("border-white/60", "text-white");
-            btn.classList.add("border-gray-400", "text-gray-700");
-          });
-        } else {
-          navbar.classList.remove("nav-scrolled");
-          logo.classList.remove("text-dark");
-          logo.classList.add("text-white");
-          navLinks.forEach((link) => {
-            link.classList.remove("text-gray-700");
-            link.classList.add("text-white");
-          });
-          langBtns.forEach((btn) => {
-            btn.classList.remove("border-gray-400", "text-gray-700");
-            btn.classList.add("border-white/60", "text-white");
-          });
-        }
-      });
-
-      // 移动端菜单切换
-      document.getElementById("menuBtn").addEventListener("click", function () {
-        const mobileMenu = document.getElementById("mobileMenu");
-        mobileMenu.classList.toggle("hidden");
-        const icon = this.querySelector("i");
-        if (mobileMenu.classList.contains("hidden")) {
-          icon.classList.remove("fa-times");
-          icon.classList.add("fa-bars");
-        } else {
-          icon.classList.remove("fa-bars");
-          icon.classList.add("fa-times");
-        }
-      });
-
-      // 点击移动端菜单链接后关闭菜单
-      document.querySelectorAll("#mobileMenu a").forEach((link) => {
-        link.addEventListener("click", function () {
-          document.getElementById("mobileMenu").classList.add("hidden");
-          document.querySelector("#menuBtn i").classList.remove("fa-times");
-          document.querySelector("#menuBtn i").classList.add("fa-bars");
-        });
-      });
-
-      // 平滑滚动到锚点
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-          const targetId = this.getAttribute("href");
-          if (targetId === "#") return;
-          const targetElement = document.querySelector(targetId);
-          if (targetElement) {
-            window.scrollTo({
-              top: targetElement.offsetTop - 80,
-              behavior: "smooth",
-            });
-          }
-        });
-      });
-
-      // 返回顶部功能
-      window.onscroll = function () {
-        const btn = document.getElementById("topBtn");
-        if (
-          document.body.scrollTop > 300 ||
-          document.documentElement.scrollTop > 300
-        ) {
-          btn.style.display = "block";
-        } else {
-          btn.style.display = "none";
-        }
-      };
-
-      function scrollToTop() {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      // 联系表单验证
-      document
-        .getElementById("contactForm")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
-          const name = document.getElementById("name").value.trim();
-          const email = document.getElementById("email").value.trim();
-          const message = document.getElementById("message").value.trim();
-
-          if (!name || !email || !message) {
-            alert(t("formRequired"));
-            return;
-          }
-
-          alert(t("formThanks"));
-          this.reset();
-        });
-    </script>
-  </body>
+  <dialog class="upload-dialog" id="uploadDialog" aria-labelledby="uploadTitle" aria-describedby="uploadTip uploadStatus"><form id="uploadForm" autocomplete="off"><div class="upload-head"><div><span>本地演示</span><h2 id="uploadTitle">发布装饰模型</h2></div><button class="dialog-close static" type="button" id="closeUpload" aria-label="关闭发布窗口">×</button></div><p class="upload-tip" id="uploadTip">模型只保留在当前浏览器会话，不会上传到网络。</p><div class="form-grid"><label class="field wide"><span>STL 模型文件</span><input id="uploadFile" name="modelFile" type="file" accept=".stl" required aria-required="true" aria-describedby="uploadFileHelp uploadStatus"><small id="uploadFileHelp">选择装饰性建筑打印模型的 STL 文件，最大 50 MB</small></label><label class="field"><span>模型名称</span><input id="uploadName" name="modelName" required aria-required="true" maxlength="40" placeholder="例如：参数化光影壁饰…" autocomplete="off"><small>用于模型索引显示</small></label><label class="field"><span>模型分类</span><select id="uploadCategory" name="category"><option>装饰构件</option><option>纹样浮雕</option><option>景观装置</option><option>艺术雕塑</option></select><small>决定模型筛选入口</small></label><label class="field"><span>建议材料</span><input id="uploadMaterial" name="material" required aria-required="true" value="细骨料混凝土" autocomplete="off"><small>填写计划使用的打印材料</small></label><label class="field"><span>模型尺寸</span><input id="uploadDimensions" name="dimensions" required aria-required="true" placeholder="例如：1200 × 180 × 2400 mm…" autocomplete="off"><small>建议使用“长 × 宽 × 高”</small></label></div><p class="upload-status" id="uploadStatus" aria-live="polite"></p><button class="button button-accent submit-upload" type="submit">加入模型库</button></form></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js?v=28.8" defer></script>
+</body>
 </html>
