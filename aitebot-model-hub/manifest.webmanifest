@@ -1,0 +1,11 @@
+{
+  "name": "AITEBOT MODEL HUB｜建筑打印模型社区",
+  "short_name": "AITEBOT 模型库",
+  "description": "为筑墙智匠建筑打印机器人打造的装饰构件、浮雕、装置与雕塑模型社区",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f4f2",
+  "theme_color": "#171817"
+}
